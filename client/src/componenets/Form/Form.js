@@ -3,7 +3,7 @@ import { TextField, Button, Typography, Paper } from '@material-ui/core';
 import FileBase from 'react-file-base64';
 
 import { useDispatch } from 'react-redux';
-
+import './../../index.css'
 import useStyles from './styles';
 import { createPost } from '../../actions/posts';;
 
@@ -25,9 +25,11 @@ const Form = () => {
          
     }
     return (
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} style={{background:'rgb(238, 217, 196)'}}>
             <form autoComplete='off' noValidate className={'${classes.root} ${classes.form}'} onSubmit={handleSubmit}>
-                <Typography variaint="h6">
+                <Typography variaint="h6" style={{
+                    color:'rgb(10, 4, 179)', fontWeight:'700'
+                }}>
                     Creating a Post </Typography>
                 <TextField name="creator" variant="outlined" label="Creator" fullWidth value={postData.creator} onChange={(e) => setPostData({ ...postData, creator: e.target.value })} />
 
@@ -41,8 +43,10 @@ const Form = () => {
                     <FileBase type="file" multiple={false}
                     onDone={({base64}) => setPostData({ ...postData, selectedFile: base64})}/>
                 </div>
-                <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
-                <Button variant="contained" color="secondary" size="small" onClick={clear} type="submit" fullWidth>Clear</Button>
+                <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth style={{color:'rgb(118, 216, 155)', background:'rgb(2, 15, 92', fontWeight:'bold'}}>Submit</Button>
+                <Button variant="contained" color="primary" size="small" onClick={clear} type="submit" fullWidth style={{
+                    color:'rgb(253, 39, 149)', background:'rgb(1, 78, 14)', fontWeight:'600'
+                }}>Clear</Button>
             </form>
         </Paper>
     );

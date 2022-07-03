@@ -19,9 +19,13 @@ const App = () => {
 
     return (
         <Container>
-            <AppBar className = {classes.appBar} position = "static" color="secondary">
-                <Typography className={classes.heading} variant="h2" align="center" str><strong>interAct</strong></Typography>
-                <img className={classes.image} src={interact} alt="interact" height="70" width="65" />
+            <AppBar className = {classes.appBar} position = "static" style={{
+                background:'rgb(2, 15, 92'
+            }}>
+                <Typography className={classes.heading} variant="h2" align="center" style={{
+                    fontFamily:'algerian', color:'rgb(170, 246, 255)'
+                }}>inteReact
+                <img className={classes.image} src={interact} alt="interact" height="42" width="60" align="space-between" /></Typography>
             </AppBar>
             <Grow in>
                 <Container>

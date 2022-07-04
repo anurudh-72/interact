@@ -1,51 +1,66 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
 import FileBase from 'react-file-base64';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
 import './../../index.css'
 import useStyles from './styles';
-import { createPost } from '../../actions/posts';;
+import { createPost, updatePost } from '../../actions/posts'; 
 
-const Form = () => {
+const Form = ({ currentId, setCurrentId }) => {
     const [postData, setPostData] = useState({
-        creator: '', title: '', tags: '', selectedFile: ''
+        creator: '', title: '', tags: '', selectedFile: '', message: '', likeCount: 0
     })
+    const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null)
+
     const classes = useStyles();
 
     const dispatch = useDispatch();
 
-    const handleSubmit = (e) => { 
-        e.preventDefault();
+    useEffect(() => {
+        if(post) setPostData(post);
+    }, [post])
 
-        dispatch(createPost(postData));
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (currentId) {
+            dispatch(updatePost(currentId, postData));
+        } else {
+            dispatch(createPost(postData));
+        }
+        clear();
     }
 
     const clear = () => {
-         
+        setCurrentId(null);
+        setPostData({
+            creator: '', title: '', tags: '', selectedFile: '', message: ''
+        })
+
     }
     return (
-        <Paper className={classes.paper} style={{background:'rgb(238, 217, 196)'}}>
-            <form autoComplete='off' noValidate className={'${classes.root} ${classes.form}'} onSubmit={handleSubmit}>
+        <Paper className={classes.paper} style={{ background: 'rgb(238, 217, 196)' }}>
+            <form autoComplete='off' noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
                 <Typography variaint="h6" style={{
-                    color:'rgb(10, 4, 179)', fontWeight:'700'
+                    color: 'rgb(10, 4, 179)', fontWeight: '700'
                 }}>
-                    Creating a Post </Typography>
+                    {currentId ? 'Editing a post...' : 'Creating a Post'} </Typography>
                 <TextField name="creator" variant="outlined" label="Creator" fullWidth value={postData.creator} onChange={(e) => setPostData({ ...postData, creator: e.target.value })} />
 
                 <TextField name="title" variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />
 
-                <TextField name="message" variant="outlined" label="Message" fullWidth value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
+                <TextField name="message" variant="outlined" label="Message" fullWidth multiline rows={4}   value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
 
-                <TextField name="tags" variant="outlined" label="Tags" fullWidth value={postData.tags} onChange={(e) => setPostData({ ...postData, tags: e.target.value })} />
+                <TextField name="tags" variant="outlined" label="Tags" fullWidth value={postData.tags} onChange={(e) => setPostData({ ...postData, tags: e.target.value.split(',') })} />
 
-                <div  className={classes.fileInput}>
+                <div className={classes.fileInput}>
                     <FileBase type="file" multiple={false}
-                    onDone={({base64}) => setPostData({ ...postData, selectedFile: base64})}/>
+                        onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} />
                 </div>
-                <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth style={{color:'rgb(118, 216, 155)', background:'rgb(2, 15, 92', fontWeight:'bold'}}>Submit</Button>
+                <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth style={{ color: 'rgb(118, 216, 155)', background: 'rgb(2, 15, 92', fontWeight: 'bold' }}>Submit</Button>
                 <Button variant="contained" color="primary" size="small" onClick={clear} type="submit" fullWidth style={{
-                    color:'rgb(253, 39, 149)', background:'rgb(1, 78, 14)', fontWeight:'600'
+                    color: 'rgb(253, 39, 149)', background: 'rgb(1, 78, 14)', fontWeight: '600'
                 }}>Clear</Button>
             </form>
         </Paper>
